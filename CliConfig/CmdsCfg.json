@@ -1,0 +1,23 @@
+{
+  "commands": [
+    {
+      "name": "tail",
+      "params": [
+        {
+          "shortName": "-c",
+          "longName": "--bytes",
+          "type": "int"
+        },
+        {
+          "shortName": "-n",
+          "longName": "--lines",
+          "type": "int"
+        }
+      ]
+    },
+
+    {
+      "name": "touch"
+    }
+  ]
+}

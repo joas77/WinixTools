@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <Poco/File.h>
 #include <CLI/CLI.hpp>
@@ -14,12 +15,11 @@ int main(int argc, char** argv) {
     // add version output
     app.set_version_flag("--version", std::string(VERSION));
 
-    std::string filePath;
-    CLI::Option* optFile = app.add_option("FILE", filePath);
+    std::vector<std::string> filePaths;
+    app.add_option("FILE", filePaths)->required();
 
     bool flagAccessTime;
     CLI::Option* opt = app.add_flag("-a", flagAccessTime, "change only the access time");
-    
     
     bool flagDoNotCreate;
     CLI::Option* copt = app.add_flag("-c,--no-create", flagDoNotCreate, "do not create any files");
@@ -30,22 +30,23 @@ int main(int argc, char** argv) {
     std::string referenceFile;
     app.add_option("-r,--reference", referenceFile, "use this file's times instead of current time");
 
-
     CLI11_PARSE(app, argc, argv);
 
-
-    Poco::File file = Poco::File(filePath);
-    
-    if (file.exists())
+    for (auto& path : filePaths)
     {
-        Poco::Timestamp now;
-        file.setLastModified(now);
-    }
-    else
-    {
-        file.createFile();
-    }
 
+        Poco::File file = Poco::File(path);
+
+        if (file.exists())
+        {
+            Poco::Timestamp now;
+            file.setLastModified(now);
+        }
+        else
+        {
+            file.createFile();
+        }
+    }
 
     return 0;
 }
